@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html>
+<body>
+
+<div id="demo1"
+style="float:left;height:600px;width:400px;border:1px solid #ccc;font:32px/26px Georgia, Garamond, Serif;overflow:auto;"
+>
+<input type="text" id="myText" value="" style="width:400px;height:600px;font:60px;" > 
+</div>
+<button onclick="myFunction()"">Run</button>
+<div id="demo"
+style="height:600px;
+float:right;
+width:500px;
+margin:10px;
+border:1px solid #ccc;
+font:16px/26px Georgia, Garamond, Serif;
+overflow:auto;">
+
+<script>
+
+var save1 = [];
+var save2 = [];
+var save3 = [];
+
+function toCharArray(str){
+     charArray =[];
+     for(var i=0;i<str.length;i++){
+          charArray.push(str[i]);
+     }
+     
+     return charArray;
+}
+
+function isCharNumber(c){
+    return c >= '0' && c <= '9';
+}
+
+function varsplit(state_ment){
+    var spl=state_ment.split(/[=;]/);
+    return spl;
+}
+
+function varsplit2(state_ment){
+    var spl = state_ment.split(/[/+*%-]/);
+    return spl;
+}
+
+function counter(str){
+    for (var i=0;;i++){
+        if (str[i] == null){
+            return i-1;
+        }
+    }
+}
+
+function  isLetter(value) {
+   var value = value.toUpperCase();
+   for (let i = 0; i < value.length; i++) 
+      if (!(value[i] >= "A" && value[i] <= "Z")) return false;
+
+   return true;
+}
+
+function splitting(state_ment){
+    var str =toCharArray(state_ment);
+    var strdup =toCharArray(state_ment);
+    var l;
+    save1=toCharArray(state_ment);
+    var split = varsplit(state_ment);
+    l=counter(split);
+    try{
+        var str1 = [];
+        var from = 0;
+        var testme = 0;
+        for (var i=0;i<l;i++){
+            str1.push(split[i]);
+            from = split[i].length + from;
+            str1.push(str[from + testme]);
+            testme++;
+        }
+        var cap = str1.length;
+        save2 = [];
+        var count=0;
+        for (i=0;i<cap;i++){
+            save2[count] = str1[i];
+            count++;
+        }
+        
+    }
+    catch(err){
+    }
+    
+    return 1;
+}
+
+function check_simpleno(simplenum){
+    var state = 0;
+    var table = [[1,4,4],[1,2,4],[3,4,4],[4,4,4]];
+    var input = 0;
+    var flag = 0;
+    var l;
+    l=simplenum.length;
+    for (var i=0;i<1;i++){
+        if ( simplenum[i] == '.'){
+            input = 1;
+        }
+        else if (isCharNumber(simplenum[i])==true){
+            input = 0;
+        }
+        else {
+            input = 2;
+        }
+
+        state = table[state][input];
+        if (state == 1){
+            flag = 1;
+        }
+        else if(state == 3){
+            flag = 1;
+        }
+        else {
+            flag = 0;
+        }   
+    }
+    
+    if (flag == 1){
+        return 1;
+    }
+    else {
+        return 0;
+    }
+}
+
+function check_identifier(simpleidentifier){
+    var state = 0;
+    var table = [[1,1,2,2], [1,1,1,2], [2,2,2,2]];
+    var input = 0;
+    var flag = 0;
+    var l;
+    l=simpleidentifier.length;
+    for (var i=0;i<l;i++){
+        if (simpleidentifier[i] == '_'){
+            input = 0;
+        }
+        else if (isLetter(simpleidentifier[i]) == true){
+            input = 1;
+        }
+        else if (Number.isInteger(simpleidentifier[i])== true){
+            input = 2;
+        }
+        else {
+            input = 3;
+        }
+        state = table[state][input];
+        if (state == 1){
+            flag = 1;
+        }
+        else {
+            flag = 0;
+        }
+    }
+    
+    if (flag == 1) {
+        return 1;
+    }
+    else {
+        return 0;
+    }
+}
+
+function check_expression(expressme){
+    var state = 0;
+    var input;
+    var table = [[1,4,1,4], [4,2,4,4], [3,4,3,4], [4,2,4,4], [4,4,4,4]];
+    var plus = '+';
+    var minus = '-';
+    var multi = '*';
+    var divide = '/';
+    var modul = '%';
+    var l = splitting2(expressme);
+    var flag = 0;
+    for (var i=0;save3.length-1;i++){
+        if (check_identifier(save3[i]) == 1){
+            input = 0;
+        }
+        else if (save3[i] == plus || save3[i] == minus || save3[i] == multi || save3[i] == divide || save3[i] == modul){
+            input = 1;
+        }
+        else if (check_simpleno(save3[i]) == 1){
+            input = 2;
+        }
+        else {
+            input = 3;
+        }
+        state = table[state][input];
+        if (state == 3) {
+            flag = 1;
+        }
+        else {
+            flag = 0;
+        }
+    }
+    
+    if (flag == 1) {
+        return 1;
+    }
+    else {
+        return 0;
+    }
+    
+}
+
+function splitting2(state_ment){
+    var str = toCharArray(state_ment);
+    var split = varsplit2(state_ment);
+    var str1 = [];
+    var from = 0;
+    var testme = 0;
+    var l = split.length;
+    for (var i=0;i<l;i++){
+        str1.push(split[i]);
+        if (from + split[i].length + testme < counter(str)){
+            from = split[i].length + from;
+            str1.push(str[from+testme]);
+            testme++;
+        }
+    }
+    var cap = str1.length;
+    save3 = [];
+    var count = 0;
+    for (i=0;i<cap;i++){
+        save3[count] = str1[i];
+        count++;
+    }
+    return 1;
+}
+function myFunction() {
+var table = [[1,5,5,5,5,5], [5,2,5,4,5,5], [1,5,3,5,5,3], [5,5,5,4,5,5], [5,5,5,5,5,5]];
+var s = document.getElementById("myText").value;
+  document.getElementById("demo").innerHTML = s;
+var statement = s;
+var h = 0;
+var state = 0;
+var input ;
+var equall = '=';
+var semicol = ';';
+var flag = 0;
+h = splitting(statement);
+    for (var i =0;i<save2.length;i++){
+        var o = check_identifier(save2[i]);
+        if (o == 1) {
+            input = 0;
+        }
+        else if (save2[i]==equall){
+            input = 1;
+            
+        }
+        else if (check_expression(save2[i])==1){
+            input = 2;
+        }
+        else if (save2[i] == semicol){
+            input = 3; 
+        }
+        else if (check_simpleno(save2[i])==1) {
+            input = 5;
+        }
+        else {
+            input = 4;
+        }
+        state = table[state][input];
+        if (state == 4){
+            flag = 1;
+        } else if (state == 5){
+            break;
+        }
+     }
+if (flag == 1){
+document.getElementById("demo").innerHTML ="Valid Assignment Statement";
+} 
+else {
+document.getElementById("demo").innerHTML ="Invalid Assignment Statement";
+}}
+</script>
+</div>
